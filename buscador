@@ -6,33 +6,31 @@ st.set_page_config(page_title="📍 Buscador de Visitas - Lost Mary", layout="wi
 st.title("📋 Buscador de Visitas a Puntos de Venta")
 st.markdown("Consulta la última visita registrada en los puntos de venta de **Valencia**, **Asturias** y **Málaga**.")
 
-# --- Función para cargar los datos desde Google Sheets ---
 @st.cache_data
 def cargar_datos():
-    url = "https://docs.google.com/spreadsheets/d/1RzAMfJvg7OQmVITHw0rAeHPAnn34qocMzVa6qvARMAQ/export?format=xlsx"
-    xls = pd.ExcelFile(url)
-    datos = {}
-    for hoja in xls.sheet_names:
-        df = pd.read_excel(xls, hoja)
-        df["Provincia_origen"] = hoja.upper()
-        datos[hoja] = df
-    return datos
+    try:
+        url = "https://docs.google.com/spreadsheets/d/1RzAMfJvg7OQmVITHw0rAeHPAnn34qocMzVa6qvARMAQ/export?format=xlsx"
+        xls = pd.ExcelFile(url)
+        datos = {}
+        for hoja in xls.sheet_names:
+            df = pd.read_excel(xls, hoja)
+            df["Provincia_origen"] = hoja.upper()
+            datos[hoja] = df
+        return pd.concat(datos.values(), ignore_index=True)
+    except Exception as e:
+        st.error(f"No se pudo cargar el archivo de Google Sheets: {e}")
+        return pd.DataFrame()
 
-datos = cargar_datos()
+df_total = cargar_datos()
 
-# --- Unificar todas las pestañas en un único dataframe ---
-df_total = pd.concat(datos.values(), ignore_index=True)
+if df_total.empty:
+    st.stop()
 
-# Asegurar que la columna de fecha esté en formato datetime
 df_total["Marca temporal"] = pd.to_datetime(df_total["Marca temporal"], errors="coerce")
 
-# --- BUSCADOR ---
 st.subheader("🔍 Buscar punto de venta por dirección")
 busqueda = st.text_input("Introduce parte de la dirección (columna C):")
 
-if busqueda:
-    coincidencias = df_total[df_total["Dirección"].str.contains(busqueda, case=False, na=False)]
-    
 if busqueda:
     coincidencias = df_total[df_total["Dirección"].str.contains(busqueda, case=False, na=False)]
 
@@ -53,12 +51,5 @@ if busqueda:
 else:
     st.info("Escribe parte de una dirección para comenzar la búsqueda.")
 
-
-    else:
-        st.warning("No se han encontrado coincidencias con esa dirección.")
-else:
-    st.info("Escribe parte de una dirección para comenzar la búsqueda.")
-
-# --- INFO ADICIONAL ---
 st.markdown("---")
 st.caption("Desarrollado por Antonio Meca · Lost Mary · © 2025")
