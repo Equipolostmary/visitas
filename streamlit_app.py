@@ -4,9 +4,6 @@ import pandas as pd
 import gspread
 from gspread_dataframe import set_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
-import json
-from io import BytesIO
-from pathlib import Path
 from datetime import datetime
 
 st.set_page_config(page_title="Gestor Visitas - Lost Mary", layout="wide")
@@ -25,8 +22,10 @@ def get_gspread_client():
     Autenticación correcta para Streamlit Cloud
     usando st.secrets["google_credentials"]
     """
-    scope = ["https://www.googleapis.com/auth/spreadsheets",
-             "https://www.googleapis.com/auth/drive"]
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
 
     if "google_credentials" not in st.secrets:
         st.error("❌ Falta st.secrets['google_credentials']")
@@ -85,7 +84,7 @@ if full.empty:
 addr_col = find_address_column(full)
 date_col = find_date_column(full)
 
-# Sidebar
+# ---------- SIDEBAR ----------
 with st.sidebar:
     st.header("Búsqueda")
     query = st.text_input("Buscar por dirección")
@@ -95,7 +94,7 @@ with st.sidebar:
     for z in FORM_LINKS:
         st.markdown(f"[{z}]({FORM_LINKS[z]})")
 
-# Filtering
+# ---------- FILTERING ----------
 df = full.copy()
 if zona_filter != "(todas)":
     df = df[df["__zona"] == zona_filter]
@@ -156,7 +155,7 @@ if not results.empty:
 else:
     st.info("Introduce una dirección para buscar.")
 
-# ---------- Create Visit ----------
+# ---------- CREATE VISIT ----------
 st.markdown("---")
 st.header("Crear visita desde la app")
 
