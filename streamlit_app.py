@@ -10,6 +10,7 @@ st.set_page_config(page_title="Gestor de Visitas", layout="wide")
 
 # Cargamos la URL desde los Secrets de Streamlit
 API_URL = st.secrets["API_URL"]
+st.write("URL cargada:", API_URL)
 
 
 # --------------------------------------------------------
