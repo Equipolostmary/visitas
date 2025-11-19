@@ -6,7 +6,7 @@ import pydeck as pdk
 st.set_page_config(page_title="Gestor de Visitas", layout="wide")
 
 # --- CONFIG ---
-API_URL = "TU_URL_DEL_APPS_SCRIPT"   # 👉 Pega aquí tu URL /exec
+API_URL = "https://script.google.com/macros/s/AKfycbwwwflRG42o1J_EfwUn992UxqxvO4akkYp_j-8VretD4wEtEzFD0oJgS_DuSi-sNlGR-A/exec"   #
 
 
 # --------------------------------------------------------
