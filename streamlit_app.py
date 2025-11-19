@@ -9,7 +9,7 @@ import pydeck as pdk
 st.set_page_config(page_title="Gestor de Visitas", layout="wide")
 
 # Cargamos la URL desde los Secrets de Streamlit
-API_URL = st.secrets["https://script.google.com/macros/s/AKfycbwwwflRG42o1J_EfwUn992UxqxvO4akkYp_j-8VretD4wEtEzFD0oJgS_DuSi-sNlGR-A/exec"]  # 👈 ESTA ES LA BUENA
+API_URL = st.secrets["API_URL"]
 
 
 # --------------------------------------------------------
